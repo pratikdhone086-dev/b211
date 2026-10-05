@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Teacher Registration - Coaching Management System</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .register-container {
+            width: 450px;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px #d5d5d5;
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 18px;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+            color: #1f2937;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            margin: 8px 0 28px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #374151;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .register-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .login {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .login a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        @media (max-width: 500px) {
+
+            .register-container {
+                width: 90%;
+                padding: 28px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="register-container">
+
+
+    <div class="logo">
+        CMS
+    </div>
+
+
+    <h1>Create Teacher Account</h1>
+
+    <div class="subtitle">
+        Coaching Management System
+    </div>
+
+
+    <form onsubmit="registerTeacher(event)">
+
+
+        <label>Teacher ID</label>
+
+        <input
+            type="number"
+            id="id"
+            placeholder="Enter teacher ID"
+            required
+        >
+
+
+        <label>Name</label>
+
+        <input
+            type="text"
+            id="name"
+            placeholder="Enter full name"
+            required
+        >
+
+
+        <label>Email</label>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter email"
+            required
+        >
+
+
+        <label>Username</label>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Create username"
+            required
+        >
+
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Create password"
+            required
+        >
+
+
+        <button
+            type="submit"
+            class="register-btn"
+        >
+            Create Account
+        </button>
+
+
+    </form>
+
+
+    <div class="login">
+
+        Already have an account?
+
+        <a href="index.html">
+            Login
+        </a>
+
+    </div>
+
+
+    <div class="footer">
+
+        Java Spring Boot + MySQL
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+function registerTeacher(event) {
+
+    event.preventDefault();
+
+
+    let teacher = {
+
+        id: document.getElementById("id").value,
+
+        name: document.getElementById("name").value,
+
+        email: document.getElementById("email").value,
+
+        username: document.getElementById("username").value,
+
+        password: document.getElementById("password").value
+
+    };
+
+
+    fetch("/teachers", {
+
+        method: "POST",
+
+        headers: {
+
+            "Content-Type": "application/json"
+
+        },
+
+        body: JSON.stringify(teacher)
+
+    })
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error("Registration failed");
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        alert("Teacher account created successfully!");
+
+        window.location.href = "index.html";
+
+    })
+
+    .catch(error => {
+
+        console.log(error);
+
+        alert("Registration failed. Please check the details.");
+
+    });
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
+

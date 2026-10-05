@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Student Management</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1300px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2563eb;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .submit-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        th {
+            background: #1f2937;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .student-photo {
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 7px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 2px;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #f59e0b;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+        }
+
+        .photo-btn {
+            background: #16a34a;
+        }
+
+        .count-box {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #eff6ff;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #1d4ed8;
+        }
+
+        @media (max-width: 768px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- LOGIN CHECK -->
+
+<script>
+
+    if (sessionStorage.getItem("isLoggedIn") !== "true") {
+
+        window.location.href = "index.html";
+
+    }
+
+</script>
+
+
+<header>
+
+    <h1>Student Management System</h1>
+
+    <button
+        class="logout-btn"
+        onclick="logout()">
+
+        Logout
+
+    </button>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- ADD STUDENT -->
+
+    <div class="card">
+
+        <h2>Add Student</h2>
+
+        <form id="studentForm">
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>Student ID</label>
+
+                    <input
+                        type="number"
+                        id="id"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Name</label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Email</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Mobile</label>
+
+                    <input
+                        type="text"
+                        id="mobile"
+                        maxlength="10"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Course</label>
+
+                    <select
+                        id="course"
+                        required>
+
+                        <option value="">
+                            Select Course
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Batch</label>
+
+                    <select
+                        id="batch"
+                        required>
+
+                        <option value="">
+                            Select Batch
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label>Photo</label>
+
+                    <input
+                        type="file"
+                        id="photo"
+                        accept="image/*">
+
+                </div>
+
+
+                <div class="full-width">
+
+                    <button
+                        type="submit"
+                        class="submit-btn">
+
+                        Save Student
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- STUDENT LIST -->
+
+    <div class="card">
+
+        <h2>Students List</h2>
+
+
+        <div class="count-box">
+
+            Total Students:
+            <span id="studentCount">0</span>
+
+        </div>
+
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="Search student..."
+                oninput="searchStudents()">
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Photo</th>
+
+                        <th>Name</th>
+
+                        <th>Email</th>
+
+                        <th>Mobile</th>
+
+                        <th>Course</th>
+
+                        <th>Batch</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="studentTableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+/* =====================================================
+   API URLS
+===================================================== */
+
+const studentApiUrl = "/students";
+
+const courseApiUrl = "/courses";
+
+const batchApiUrl = "/batches";
+
+
+let students = [];
+
+let courses = [];
+
+let batches = [];
+
+
+/* =====================================================
+   LOAD COURSES
+===================================================== */
+
+async function loadCourses() {
+
+    try {
+
+        const response =
+            await fetch(courseApiUrl);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Course API failed"
+            );
+
+        }
+
+
+        courses =
+            await response.json();
+
+
+        const dropdown =
+            document.getElementById(
+                "course"
+            );
+
+
+        dropdown.innerHTML =
+            '<option value="">Select Course</option>';
+
+
+        courses.forEach(
+            function(course) {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    course.name;
+
+
+                option.textContent =
+                    course.name;
+
+
+                dropdown.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+    }
+    catch (error) {
+
+        console.error(
+            "Course loading error:",
+            error
+        );
+
+        alert(
+            "Error loading courses"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   LOAD BATCHES
+===================================================== */
+
+async function loadBatches() {
+
+    try {
+
+        const response =
+            await fetch(batchApiUrl);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Batch API failed"
+            );
+
+        }
+
+
+        batches =
+            await response.json();
+
+
+        console.log(
+            "Batches loaded:",
+            batches
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Batch loading error:",
+            error
+        );
+
+        alert(
+            "Error loading batches"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   LOAD BATCHES BY COURSE
+===================================================== */
+
+function loadBatchesByCourse() {
+
+    const selectedCourse =
+        document.getElementById(
+            "course"
+        ).value;
+
+
+    const batchDropdown =
+        document.getElementById(
+            "batch"
+        );
+
+
+    batchDropdown.innerHTML =
+        '<option value="">Select Batch</option>';
+
+
+    if (!selectedCourse) {
+
+        return;
+
+    }
+
+
+    const filteredBatches =
+        batches.filter(
+            function(batch) {
+
+                return (
+                    batch.course &&
+                    batch.course
+                        .trim()
+                        .toLowerCase() ===
+                    selectedCourse
+                        .trim()
+                        .toLowerCase()
+                );
+
+            }
+        );
+
+
+    console.log(
+        "Selected Course:",
+        selectedCourse
+    );
+
+
+    console.log(
+        "Filtered Batches:",
+        filteredBatches
+    );
+
+
+    if (
+        filteredBatches.length === 0
+    ) {
+
+        batchDropdown.innerHTML =
+            '<option value="">No batch available</option>';
+
+        return;
+
+    }
+
+
+    filteredBatches.forEach(
+        function(batch) {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                batch.name;
+
+
+            option.textContent =
+                batch.name +
+                " - " +
+                batch.timing;
+
+
+            batchDropdown.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   COURSE CHANGE EVENT
+===================================================== */
+
+document.addEventListener(
+    "change",
+    function(event) {
+
+        if (
+            event.target &&
+            event.target.id === "course"
+        ) {
+
+            loadBatchesByCourse();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   GET STUDENTS
+===================================================== */
+
+async function getStudents() {
+
+    try {
+
+        const response =
+            await fetch(
+                studentApiUrl
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Student API failed"
+            );
+
+        }
+
+
+        students =
+            await response.json();
+
+
+        displayStudents(
+            students
+        );
+
+
+        document.getElementById(
+            "studentCount"
+        ).innerText =
+            students.length;
+
+    }
+    catch (error) {
+
+        console.error(
+            "Student loading error:",
+            error
+        );
+
+        alert(
+            "Error loading students"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DISPLAY STUDENTS
+===================================================== */
+
+function displayStudents(
+    studentList
+) {
+
+    const tbody =
+        document.getElementById(
+            "studentTableBody"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    if (
+        studentList.length === 0
+    ) {
+
+        tbody.innerHTML =
+            '<tr>' +
+            '<td colspan="8" style="text-align:center;">' +
+            'No students found' +
+            '</td>' +
+            '</tr>';
+
+        return;
+
+    }
+
+
+    studentList.forEach(
+        function(student) {
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            let photoHtml =
+                "No Photo";
+
+
+            if (student.photo) {
+
+                photoHtml =
+                    '<img src="' +
+                    student.photo +
+                    '" class="student-photo">';
+
+            }
+
+
+            row.innerHTML = `
+
+                <td>${student.id}</td>
+
+                <td>${photoHtml}</td>
+
+                <td>${student.name || ""}</td>
+
+                <td>${student.email || ""}</td>
+
+                <td>${student.mobile || ""}</td>
+
+                <td>${student.course || ""}</td>
+
+                <td>${student.batch || ""}</td>
+
+                <td>
+
+                    <button
+                        class="action-btn edit-btn"
+                        onclick="editStudent(${Number(student.id)})">
+
+                        Edit
+
+                    </button>
+
+
+                    <button
+                        class="action-btn delete-btn"
+                        onclick="deleteStudent(${Number(student.id)})">
+
+                        Delete
+
+                    </button>
+
+
+                    <button
+                        class="action-btn photo-btn"
+                        onclick="uploadPhoto(${Number(student.id)})">
+
+                        Photo
+
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(row);
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ADD STUDENT
+===================================================== */
+
+document.getElementById(
+    "studentForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+
+        event.preventDefault();
+
+
+        const id =
+            Number(
+                document.getElementById(
+                    "id"
+                ).value
+            );
+
+
+        const name =
+            document.getElementById(
+                "name"
+            ).value.trim();
+
+
+        const email =
+            document.getElementById(
+                "email"
+            ).value.trim();
+
+
+        const mobile =
+            document.getElementById(
+                "mobile"
+            ).value.trim();
+
+
+        const course =
+            document.getElementById(
+                "course"
+            ).value;
+
+
+        const batch =
+            document.getElementById(
+                "batch"
+            ).value;
+
+
+        if (!id) {
+
+            alert(
+                "Please enter student ID"
+            );
+
+            return;
+
+        }
+
+
+        if (!name) {
+
+            alert(
+                "Please enter student name"
+            );
+
+            return;
+
+        }
+
+
+        if (!email) {
+
+            alert(
+                "Please enter email"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !/^[0-9]{10}$/.test(
+                mobile
+            )
+        ) {
+
+            alert(
+                "Mobile number must be 10 digits"
+            );
+
+            return;
+
+        }
+
+
+        if (!course) {
+
+            alert(
+                "Please select course"
+            );
+
+            return;
+
+        }
+
+
+        if (!batch) {
+
+            alert(
+                "Please select batch"
+            );
+
+            return;
+
+        }
+
+
+        const student = {
+
+            id: id,
+
+            name: name,
+
+            email: email,
+
+            mobile: mobile,
+
+            course: course,
+
+            batch: batch,
+
+            photo: ""
+
+        };
+
+
+        try {
+
+            const response =
+                await fetch(
+                    studentApiUrl,
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                student
+                            )
+
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                const errorData =
+                    await response.json()
+                        .catch(
+                            () => null
+                        );
+
+
+                throw new Error(
+                    errorData?.message ||
+                    "Failed to add student"
+                );
+
+            }
+
+
+            const savedStudent =
+                await response.json();
+
+
+            alert(
+                "Student added successfully!"
+            );
+
+
+            const photoFile =
+                document.getElementById(
+                    "photo"
+                ).files[0];
+
+
+            if (photoFile) {
+
+                await uploadStudentPhoto(
+                    savedStudent.id,
+                    photoFile
+                );
+
+            }
+
+
+            document.getElementById(
+                "studentForm"
+            ).reset();
+
+
+            document.getElementById(
+                "batch"
+            ).innerHTML =
+                '<option value="">Select Batch</option>';
+
+
+            await getStudents();
+
+        }
+        catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            alert(
+                error.message
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   UPLOAD STUDENT PHOTO
+===================================================== */
+
+async function uploadStudentPhoto(
+    studentId,
+    file
+) {
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "photo",
+        file
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                studentApiUrl +
+                "/" +
+                Number(studentId) +
+                "/photo",
+                {
+
+                    method: "POST",
+
+                    body: formData
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Photo upload failed"
+            );
+
+        }
+
+
+        console.log(
+            "Photo uploaded"
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "Photo upload failed"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   PHOTO BUTTON
+===================================================== */
+
+async function uploadPhoto(
+    studentId
+) {
+
+
+    const input =
+        document.createElement(
+            "input"
+        );
+
+
+    input.type = "file";
+
+    input.accept =
+        "image/*";
+
+
+    input.onchange =
+        async function() {
+
+
+            const file =
+                input.files[0];
+
+
+            if (!file) {
+
+                return;
+
+            }
+
+
+            await uploadStudentPhoto(
+                Number(studentId),
+                file
+            );
+
+
+            await getStudents();
+
+        };
+
+
+    input.click();
+
+}
+
+
+/* =====================================================
+   EDIT STUDENT
+===================================================== */
+
+async function editStudent(
+    studentId
+) {
+
+
+    studentId =
+        Number(studentId);
+
+
+    const student =
+        students.find(
+            function(s) {
+
+                return Number(s.id) ===
+                    studentId;
+
+            }
+        );
+
+
+    if (!student) {
+
+        alert(
+            "Student not found"
+        );
+
+        return;
+
+    }
+
+
+    const name =
+        prompt(
+            "Enter student name:",
+            student.name || ""
+        );
+
+
+    if (name === null) {
+
+        return;
+
+    }
+
+
+    const email =
+        prompt(
+            "Enter email:",
+            student.email || ""
+        );
+
+
+    if (email === null) {
+
+        return;
+
+    }
+
+
+    const mobile =
+        prompt(
+            "Enter mobile:",
+            student.mobile || ""
+        );
+
+
+    if (mobile === null) {
+
+        return;
+
+    }
+
+
+    const course =
+        prompt(
+            "Enter course:",
+            student.course || ""
+        );
+
+
+    if (course === null) {
+
+        return;
+
+    }
+
+
+    const batch =
+        prompt(
+            "Enter batch:",
+            student.batch || ""
+        );
+
+
+    if (batch === null) {
+
+        return;
+
+    }
+
+
+    const updatedStudent = {
+
+        id: Number(student.id),
+
+        name: name.trim(),
+
+        email: email.trim(),
+
+        mobile: mobile.trim(),
+
+        course: course.trim(),
+
+        batch: batch.trim(),
+
+        photo: student.photo || ""
+
+    };
+
+
+    console.log(
+        "Updating student:",
+        updatedStudent
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                studentApiUrl,
+                {
+
+                    method: "PUT",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            updatedStudent
+                        )
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            const errorData =
+                await response.json()
+                    .catch(
+                        () => null
+                    );
+
+
+            throw new Error(
+                errorData?.message ||
+                "Update failed"
+            );
+
+        }
+
+
+        alert(
+            "Student updated successfully!"
+        );
+
+
+        await getStudents();
+
+    }
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "Error updating student"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DELETE STUDENT
+===================================================== */
+
+async function deleteStudent(
+    studentId
+) {
+
+
+    studentId =
+        Number(studentId);
+
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this student?"
+        );
+
+
+    if (!confirmDelete) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                studentApiUrl +
+                "/" +
+                studentId,
+                {
+
+                    method: "DELETE"
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            const errorData =
+                await response.json()
+                    .catch(
+                        () => null
+                    );
+
+
+            throw new Error(
+                errorData?.message ||
+                "Delete failed"
+            );
+
+        }
+
+
+        alert(
+            "Student deleted successfully!"
+        );
+
+
+        await getStudents();
+
+    }
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SEARCH STUDENTS
+===================================================== */
+
+function searchStudents() {
+
+
+    const searchValue =
+        document.getElementById(
+            "search"
+        ).value
+        .toLowerCase()
+        .trim();
+
+
+    const filteredStudents =
+        students.filter(
+            function(student) {
+
+
+                return (
+
+                    String(
+                        student.id
+                    )
+                    .toLowerCase()
+                    .includes(
+                        searchValue
+                    )
+
+
+                    ||
+
+                    (
+                        student.name &&
+                        student.name
+                            .toLowerCase()
+                            .includes(
+                                searchValue
+                            )
+                    )
+
+
+                    ||
+
+                    (
+                        student.email &&
+                        student.email
+                            .toLowerCase()
+                            .includes(
+                                searchValue
+                            )
+                    )
+
+
+                    ||
+
+                    (
+                        student.course &&
+                        student.course
+                            .toLowerCase()
+                            .includes(
+                                searchValue
+                            )
+                    )
+
+
+                    ||
+
+                    (
+                        student.batch &&
+                        student.batch
+                            .toLowerCase()
+                            .includes(
+                                searchValue
+                            )
+                    )
+
+                );
+
+            }
+        );
+
+
+    displayStudents(
+        filteredStudents
+    );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout() {
+
+
+    sessionStorage.removeItem(
+        "isLoggedIn"
+    );
+
+
+    sessionStorage.removeItem(
+        "username"
+    );
+
+
+    alert(
+        "Logout successful!"
+    );
+
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+/* =====================================================
+   LOAD ALL PAGE DATA
+===================================================== */
+
+async function loadPageData() {
+
+    await loadCourses();
+
+    await loadBatches();
+
+    await getStudents();
+
+}
+
+
+/* =====================================================
+   START APPLICATION
+===================================================== */
+
+loadPageData();
+
+
+</script>
+
+</body>
+
+</html>

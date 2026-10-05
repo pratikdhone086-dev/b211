@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Teacher Login - Coaching Management System</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            width: 400px;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="logo">
+            CMS
+        </div>
+
+        <h1>Teacher Login</h1>
+
+        <p class="subtitle">
+            Coaching Management System
+        </p>
+
+
+        <form onsubmit="login(event)">
+
+            <label>Username</label>
+
+            <input
+                type="text"
+                id="username"
+                placeholder="Enter username"
+                required
+            >
+
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter password"
+                required
+            >
+
+
+            <button
+                type="submit"
+                class="login-btn">
+                Login
+            </button>
+
+        </form>
+
+
+        <div class="register-link">
+
+            New teacher?
+
+            <a href="register.html">
+                Create Account
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function login(event) {
+
+            event.preventDefault();
+
+            let username =
+                document.getElementById("username").value;
+
+            let password =
+                document.getElementById("password").value;
+
+
+            fetch("http://localhost:8081/teachers/login", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    username: username,
+
+                    password: password
+
+                })
+
+            })
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("Login failed");
+                }
+
+                return response.json();
+
+            })
+
+            .then(data => {
+
+                if (data && data.id) {
+
+                    sessionStorage.setItem(
+                        "isLoggedIn",
+                        "true"
+                    );
+
+                    sessionStorage.setItem(
+                        "username",
+                        data.username
+                    );
+
+                    alert("Login successful!");
+
+                    window.location.href =
+                        "dashboard.html";
+
+                } else {
+
+                    alert(
+                        "Invalid username or password"
+                    );
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.error(error);
+
+                alert(
+                    "Invalid username or password"
+                );
+
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Attendance Management</title>
+
+<script>
+if (sessionStorage.getItem("isLoggedIn") !== "true") {
+    window.location.href = "index.html";
+}
+</script>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #333;
+}
+
+header {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.back-btn {
+    background: white;
+    color: #2563eb;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.back-btn:hover {
+    background: #eef4ff;
+}
+
+.container {
+    width: 92%;
+    max-width: 1200px;
+    margin: 35px auto;
+}
+
+.page-title {
+    margin-bottom: 25px;
+}
+
+.page-title h1 {
+    color: #1f2937;
+    margin-bottom: 7px;
+}
+
+.page-title p {
+    color: #6b7280;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+}
+
+.stat-card h3 {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.stat-card span {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.total {
+    border-left: 5px solid #2563eb;
+}
+
+.present {
+    border-left: 5px solid #198754;
+}
+
+.absent {
+    border-left: 5px solid #dc3545;
+}
+
+.total span {
+    color: #2563eb;
+}
+
+.present span {
+    color: #198754;
+}
+
+.absent span {
+    color: #dc3545;
+}
+
+.form-box {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+    margin-bottom: 25px;
+}
+
+.form-box h2 {
+    color: #1f2937;
+    margin-bottom: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #4b5563;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    font-size: 14px;
+    background: white;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.1);
+}
+
+.button-group {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.save-btn {
+    background: #198754;
+    color: white;
+    border: none;
+    padding: 11px 25px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.save-btn:hover {
+    background: #157347;
+}
+
+.update-btn {
+    background: #f59e0b;
+    color: white;
+    border: none;
+    padding: 11px 25px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.update-btn:hover {
+    background: #d97706;
+}
+
+.clear-btn {
+    background: #6b7280;
+    color: white;
+    border: none;
+    padding: 11px 25px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.clear-btn:hover {
+    background: #4b5563;
+}
+
+.table-box {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+    overflow-x: auto;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.table-header h2 {
+    color: #1f2937;
+}
+
+.refresh-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.refresh-btn:hover {
+    background: #1d4ed8;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+th {
+    background: #1f2937;
+    color: white;
+    padding: 13px;
+    text-align: left;
+}
+
+td {
+    padding: 13px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+tr:hover {
+    background: #f8fafc;
+}
+
+.status-present {
+    background: #dcfce7;
+    color: #166534;
+    padding: 5px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-absent {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 5px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.edit-btn {
+    background: #f59e0b;
+    color: white;
+    border: none;
+    padding: 7px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 7px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    color: #6b7280;
+    padding: 25px;
+    margin-top: 30px;
+    font-size: 14px;
+}
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 15px 20px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .container {
+        width: 94%;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .button-group button {
+        width: 100%;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+Coaching Management System
+</div>
+
+<button class="back-btn" onclick="goDashboard()">
+Dashboard
+</button>
+
+</header>
+
+<div class="container">
+
+<div class="page-title">
+
+<h1>Attendance Management</h1>
+
+<p>
+Manage student attendance and daily records
+</p>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-card total">
+
+<h3>Total Attendance</h3>
+
+<span id="attendanceCount">0</span>
+
+</div>
+
+<div class="stat-card present">
+
+<h3>Present</h3>
+
+<span id="presentCount">0</span>
+
+</div>
+
+<div class="stat-card absent">
+
+<h3>Absent</h3>
+
+<span id="absentCount">0</span>
+
+</div>
+
+</div>
+
+<div class="form-box">
+
+<h2>Add / Update Attendance</h2>
+
+<div class="form-grid">
+
+<div class="input-group">
+
+<label>Attendance ID</label>
+
+<input
+type="number"
+id="id"
+placeholder="Enter Attendance ID">
+
+</div>
+
+<div class="input-group">
+
+<label>Student</label>
+
+<select id="studentId">
+
+<option value="">
+Select Student
+</option>
+
+</select>
+
+</div>
+
+<div class="input-group">
+
+<label>Attendance Date</label>
+
+<input
+type="date"
+id="date">
+
+</div>
+
+<div class="input-group">
+
+<label>Attendance Status</label>
+
+<select id="status">
+
+<option value="">
+Select Status
+</option>
+
+<option value="Present">
+Present
+</option>
+
+<option value="Absent">
+Absent
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="button-group">
+
+<button
+class="save-btn"
+onclick="saveAttendance()">
+
+Save Attendance
+
+</button>
+
+<button
+class="update-btn"
+onclick="updateAttendance()">
+
+Update Attendance
+
+</button>
+
+<button
+class="clear-btn"
+onclick="clearForm()">
+
+Clear
+
+</button>
+
+</div>
+
+</div>
+
+<div class="table-box">
+
+<div class="table-header">
+
+<h2>Attendance List</h2>
+
+<button
+class="refresh-btn"
+onclick="loadAttendance()">
+
+Refresh
+
+</button>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Student</th>
+
+<th>Date</th>
+
+<th>Status</th>
+
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="attendanceTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<footer>
+
+Coaching Management System
+|
+Java Spring Boot + MySQL
+
+</footer>
+
+<script>
+
+const apiUrl = "/attendance";
+
+const studentApiUrl = "/students";
+
+let students = [];
+
+
+function goDashboard() {
+
+    window.location.href = "dashboard.html";
+
+}
+
+
+function loadStudents() {
+
+    fetch(studentApiUrl)
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load students"
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        students = data;
+
+        const dropdown =
+            document.getElementById("studentId");
+
+        dropdown.innerHTML =
+            '<option value="">Select Student</option>';
+
+        data.forEach(student => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = String(student.id);
+
+            option.textContent =
+                student.id + " - " + student.name;
+
+            dropdown.appendChild(option);
+
+        });
+
+        loadAttendance();
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert("Error loading students");
+
+    });
+
+}
+
+
+function loadAttendance() {
+
+    fetch(apiUrl)
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load attendance"
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        const table =
+            document.getElementById("attendanceTable");
+
+        table.innerHTML = "";
+
+        let presentCount = 0;
+
+        let absentCount = 0;
+
+        data.forEach(attendance => {
+
+            if (
+                attendance.status &&
+                attendance.status.toLowerCase() === "present"
+            ) {
+
+                presentCount++;
+
+            }
+
+            if (
+                attendance.status &&
+                attendance.status.toLowerCase() === "absent"
+            ) {
+
+                absentCount++;
+
+            }
+
+            const student =
+                students.find(
+                    s =>
+                        Number(s.id) ===
+                        Number(attendance.studentId)
+                );
+
+            const studentName =
+                student
+                    ? student.name
+                    : "Student ID: " +
+                      attendance.studentId;
+
+            let statusClass =
+                attendance.status &&
+                attendance.status.toLowerCase() === "present"
+                    ? "status-present"
+                    : "status-absent";
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+
+                <td>${attendance.id}</td>
+
+                <td>${studentName}</td>
+
+                <td>${attendance.date}</td>
+
+                <td>
+
+                    <span class="${statusClass}">
+
+                        ${attendance.status}
+
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <button
+                    class="edit-btn"
+                    onclick="editAttendance(
+                        ${Number(attendance.id)}
+                    )">
+
+                    Edit
+
+                    </button>
+
+                    <button
+                    class="delete-btn"
+                    onclick="deleteAttendance(
+                        ${Number(attendance.id)}
+                    )">
+
+                    Delete
+
+                    </button>
+
+                </td>
+
+            `;
+
+            table.appendChild(row);
+
+        });
+
+        document.getElementById(
+            "attendanceCount"
+        ).innerText = data.length;
+
+        document.getElementById(
+            "presentCount"
+        ).innerText = presentCount;
+
+        document.getElementById(
+            "absentCount"
+        ).innerText = absentCount;
+
+        if (data.length === 0) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                    colspan="5"
+                    style="
+                    text-align:center;
+                    color:#777;
+                    padding:25px;">
+
+                    No attendance records found
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert("Error loading attendance");
+
+    });
+
+}
+
+
+function validateAttendance() {
+
+    const id =
+        document.getElementById("id")
+        .value.trim();
+
+    const studentId =
+        document.getElementById("studentId")
+        .value;
+
+    const date =
+        document.getElementById("date")
+        .value;
+
+    const status =
+        document.getElementById("status")
+        .value;
+
+
+    if (!id) {
+
+        alert("Please enter Attendance ID");
+
+        return false;
+
+    }
+
+    if (Number(id) <= 0) {
+
+        alert(
+            "Attendance ID must be greater than 0"
+        );
+
+        return false;
+
+    }
+
+    if (!studentId) {
+
+        alert("Please select a student");
+
+        return false;
+
+    }
+
+    if (!date) {
+
+        alert(
+            "Please select attendance date"
+        );
+
+        return false;
+
+    }
+
+    const selectedDate =
+        new Date(date + "T00:00:00");
+
+    const today =
+        new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate > today) {
+
+        alert(
+            "Attendance date cannot be a future date"
+        );
+
+        return false;
+
+    }
+
+    if (!status) {
+
+        alert(
+            "Please select attendance status"
+        );
+
+        return false;
+
+    }
+
+    if (
+        status !== "Present" &&
+        status !== "Absent"
+    ) {
+
+        alert(
+            "Invalid attendance status"
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+function saveAttendance() {
+
+    if (!validateAttendance()) {
+
+        return;
+
+    }
+
+    const attendance = {
+
+        id: Number(
+            document.getElementById("id").value
+        ),
+
+        studentId: Number(
+            document.getElementById("studentId").value
+        ),
+
+        date:
+            document.getElementById("date").value,
+
+        status:
+            document.getElementById("status").value
+
+    };
+
+
+    fetch(apiUrl, {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type":
+                "application/json"
+        },
+
+        body:
+            JSON.stringify(attendance)
+
+    })
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            return response.text().then(message => {
+
+                throw new Error(message);
+
+            });
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        alert(
+            "Attendance added successfully"
+        );
+
+        clearForm();
+
+        loadAttendance();
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Save attendance error:",
+            error
+        );
+
+        alert(
+            "Error adding attendance"
+        );
+
+    });
+
+}
+
+
+function editAttendance(id) {
+
+    fetch(apiUrl + "/" + Number(id))
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Attendance not found"
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(attendance => {
+
+        document.getElementById("id")
+            .value = Number(attendance.id);
+
+        document.getElementById("studentId")
+            .value = String(attendance.studentId);
+
+        document.getElementById("date")
+            .value = attendance.date;
+
+        document.getElementById("status")
+            .value = attendance.status;
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+        });
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert(
+            "Error loading attendance details"
+        );
+
+    });
+
+}
+
+
+function updateAttendance() {
+
+    if (!validateAttendance()) {
+
+        return;
+
+    }
+
+    const attendance = {
+
+        id: Number(
+            document.getElementById("id").value
+        ),
+
+        studentId: Number(
+            document.getElementById("studentId").value
+        ),
+
+        date:
+            document.getElementById("date").value,
+
+        status:
+            document.getElementById("status").value
+
+    };
+
+    console.log(
+        "Updating attendance:",
+        attendance
+    );
+
+
+    fetch(apiUrl, {
+
+        method: "PUT",
+
+        headers: {
+
+            "Content-Type":
+                "application/json"
+
+        },
+
+        body:
+            JSON.stringify(attendance)
+
+    })
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            return response.text().then(message => {
+
+                console.error(
+                    "Backend error:",
+                    message
+                );
+
+                throw new Error(
+                    "Failed to update attendance"
+                );
+
+            });
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        alert(
+            "Attendance updated successfully"
+        );
+
+        clearForm();
+
+        loadAttendance();
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Update attendance error:",
+            error
+        );
+
+        alert(
+            "Error updating attendance"
+        );
+
+    });
+
+}
+
+
+function deleteAttendance(id) {
+
+    if (!confirm(
+        "Are you sure you want to delete this attendance?"
+    )) {
+
+        return;
+
+    }
+
+    fetch(
+        apiUrl + "/" + Number(id),
+        {
+            method: "DELETE"
+        }
+    )
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            return response.text().then(message => {
+
+                throw new Error(message);
+
+            });
+
+        }
+
+        return response.text();
+
+    })
+
+    .then(data => {
+
+        alert(data);
+
+        clearForm();
+
+        loadAttendance();
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Delete attendance error:",
+            error
+        );
+
+        alert(
+            "Error deleting attendance"
+        );
+
+    });
+
+}
+
+
+function clearForm() {
+
+    document.getElementById("id")
+        .value = "";
+
+    document.getElementById("studentId")
+        .value = "";
+
+    document.getElementById("date")
+        .value = "";
+
+    document.getElementById("status")
+        .value = "";
+
+}
+
+
+loadStudents();
+
+</script>
+
+</body>
+
+</html>

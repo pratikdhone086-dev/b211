@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Course Management</title>
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        color: #1f2937;
+    }
+
+    /* HEADER */
+
+    .header {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        padding: 25px 40px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: 28px;
+    }
+
+    .header p {
+        margin: 6px 0 0;
+        opacity: 0.9;
+    }
+
+    .dashboard-btn {
+        background: white;
+        color: #1d4ed8;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .dashboard-btn:hover {
+        background: #e5e7eb;
+    }
+
+    /* MAIN */
+
+    .container {
+        width: 92%;
+        max-width: 1200px;
+        margin: 30px auto;
+    }
+
+    /* STATS */
+
+    .stats {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-bottom: 25px;
+    }
+
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+
+        box-shadow:
+            0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+        margin: 0;
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+    .card h2 {
+        margin: 10px 0 0;
+        font-size: 28px;
+        color: #2563eb;
+    }
+
+    /* FORM */
+
+    .form-section {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+
+        box-shadow:
+            0 4px 15px rgba(0,0,0,0.08);
+
+        margin-bottom: 25px;
+    }
+
+    .form-section h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+
+        font-size: 14px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #2563eb;
+    }
+
+    .buttons {
+        margin-top: 18px;
+
+        display: flex;
+        gap: 10px;
+    }
+
+    button {
+        border: none;
+        border-radius: 8px;
+        padding: 11px 18px;
+
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .save-btn {
+        background: #2563eb;
+        color: white;
+    }
+
+    .save-btn:hover {
+        background: #1d4ed8;
+    }
+
+    .update-btn {
+        background: #16a34a;
+        color: white;
+    }
+
+    .update-btn:hover {
+        background: #15803d;
+    }
+
+    .clear-btn {
+        background: #6b7280;
+        color: white;
+    }
+
+    .clear-btn:hover {
+        background: #4b5563;
+    }
+
+    /* TABLE */
+
+    .table-section {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+
+        box-shadow:
+            0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 15px;
+    }
+
+    .table-header h2 {
+        margin: 0;
+    }
+
+    .refresh-btn {
+        background: #2563eb;
+        color: white;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #eff6ff;
+        color: #1e40af;
+
+        padding: 13px;
+        text-align: center;
+    }
+
+    td {
+        padding: 12px;
+        text-align: center;
+
+        border-bottom:
+            1px solid #e5e7eb;
+    }
+
+    tr:hover {
+        background: #f9fafb;
+    }
+
+    /* FEES */
+
+    .fees-badge {
+        display: inline-block;
+
+        padding: 5px 12px;
+
+        border-radius: 20px;
+
+        background: #dcfce7;
+        color: #166534;
+
+        font-weight: bold;
+    }
+
+    /* DURATION */
+
+    .duration-badge {
+        display: inline-block;
+
+        padding: 5px 12px;
+
+        border-radius: 20px;
+
+        background: #f3e8ff;
+        color: #7e22ce;
+
+        font-weight: bold;
+    }
+
+    /* ACTION BUTTONS */
+
+    .edit {
+        background: #f59e0b;
+        color: white;
+
+        margin-right: 5px;
+    }
+
+    .edit:hover {
+        background: #d97706;
+    }
+
+    .delete {
+        background: #dc2626;
+        color: white;
+    }
+
+    .delete:hover {
+        background: #b91c1c;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 768px) {
+
+        .header {
+            padding: 20px;
+
+            flex-direction: column;
+
+            gap: 15px;
+
+            text-align: center;
+        }
+
+        .container {
+            width: 95%;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .table-section {
+            overflow-x: auto;
+        }
+
+        table {
+            min-width: 700px;
+        }
+
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+```
+<!-- HEADER -->
+
+<div class="header">
+
+    <div>
+
+        <h1>Course Management</h1>
+
+        <p>
+            Manage coaching courses, fees and duration
+        </p>
+
+    </div>
+
+
+    <button
+        class="dashboard-btn"
+        onclick="window.location.href='dashboard.html'">
+
+        Dashboard
+
+    </button>
+
+</div>
+
+
+
+<div class="container">
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+        <div class="card">
+
+            <h3>Total Courses</h3>
+
+            <h2 id="courseCount">0</h2>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- FORM -->
+
+    <div class="form-section">
+
+        <h2>Add / Update Course</h2>
+
+
+        <div class="form-grid">
+
+
+            <input
+                type="number"
+                id="id"
+                placeholder="Course ID">
+
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Course Name">
+
+
+            <input
+                type="number"
+                id="fees"
+                placeholder="Course Fees">
+
+
+            <input
+                type="text"
+                id="duration"
+                placeholder="Duration (Example: 6 Months)">
+
+        </div>
+
+
+        <div class="buttons">
+
+
+            <button
+                class="save-btn"
+                onclick="saveCourse()">
+
+                Save
+
+            </button>
+
+
+            <button
+                class="update-btn"
+                onclick="updateCourse()">
+
+                Update
+
+            </button>
+
+
+            <button
+                class="clear-btn"
+                onclick="clearForm()">
+
+                Clear
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TABLE -->
+
+    <div class="table-section">
+
+
+        <div class="table-header">
+
+            <h2>Course List</h2>
+
+
+            <button
+                class="refresh-btn"
+                onclick="loadCourses()">
+
+                Refresh
+
+            </button>
+
+        </div>
+
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Course Name</th>
+
+                    <th>Fees</th>
+
+                    <th>Duration</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="courseTable">
+
+            </tbody>
+
+        </table>
+
+
+    </div>
+
+
+</div>
+```
+
+<script>
+
+
+const apiUrl = "/courses";
+
+
+/* LOGIN PROTECTION */
+
+if (sessionStorage.getItem("isLoggedIn") !== "true") {
+
+    window.location.href = "index.html";
+
+}
+
+
+/* LOAD COURSES */
+
+function loadCourses() {
+
+    fetch(apiUrl)
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load courses"
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+        .then(data => {
+
+
+            const table =
+                document.getElementById(
+                    "courseTable"
+                );
+
+
+            table.innerHTML = "";
+
+
+            /* COURSE COUNT */
+
+            document.getElementById(
+                "courseCount"
+            ).innerText = data.length;
+
+
+
+            data.forEach(course => {
+
+
+                table.innerHTML += `
+
+                    <tr>
+
+                        <td>
+                            ${course.id}
+                        </td>
+
+
+                        <td>
+                            <strong>
+                                ${course.name}
+                            </strong>
+                        </td>
+
+
+                        <td>
+
+                            <span class="fees-badge">
+
+                                Rs. ${course.fees}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="duration-badge">
+
+                                ${course.duration}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+
+                            <button
+
+                                class="edit"
+
+                                onclick="editCourse(
+
+                                    ${course.id},
+
+                                    '${course.name}',
+
+                                    ${course.fees},
+
+                                    '${course.duration}'
+
+                                )">
+
+                                Edit
+
+                            </button>
+
+
+
+                            <button
+
+                                class="delete"
+
+                                onclick="deleteCourse(
+
+                                    ${course.id}
+
+                                )">
+
+                                Delete
+
+                            </button>
+
+
+                        </td>
+
+
+                    </tr>
+
+                `;
+
+
+            });
+
+
+        })
+
+
+        .catch(error => {
+
+            console.log(error);
+
+            alert(
+                "Error loading courses"
+            );
+
+        });
+
+}
+
+
+/* VALIDATE COURSE */
+
+function validateCourse() {
+
+
+    const id =
+        document.getElementById("id")
+            .value.trim();
+
+
+    const name =
+        document.getElementById("name")
+            .value.trim();
+
+
+    const feesValue =
+        document.getElementById("fees")
+            .value;
+
+
+    const duration =
+        document.getElementById("duration")
+            .value.trim();
+
+
+
+    /* ID */
+
+    if (!id) {
+
+        alert(
+            "Please enter Course ID"
+        );
+
+        return false;
+
+    }
+
+
+    if (Number(id) <= 0) {
+
+        alert(
+            "Course ID must be greater than 0"
+        );
+
+        return false;
+
+    }
+
+
+
+    /* NAME */
+
+    if (!name) {
+
+        alert(
+            "Please enter Course Name"
+        );
+
+        return false;
+
+    }
+
+
+    if (name.length < 2) {
+
+        alert(
+            "Course Name must contain at least 2 characters"
+        );
+
+        return false;
+
+    }
+
+
+
+    /* FEES */
+
+    if (feesValue === "") {
+
+        alert(
+            "Please enter Course Fees"
+        );
+
+        return false;
+
+    }
+
+
+    const fees =
+        Number(feesValue);
+
+
+    if (isNaN(fees)) {
+
+        alert(
+            "Course Fees must be a number"
+        );
+
+        return false;
+
+    }
+
+
+    if (fees <= 0) {
+
+        alert(
+            "Course Fees must be greater than 0"
+        );
+
+        return false;
+
+    }
+
+
+
+    /* DURATION */
+
+    if (!duration) {
+
+        alert(
+            "Please enter Course Duration"
+        );
+
+        return false;
+
+    }
+
+
+    if (duration.length < 2) {
+
+        alert(
+            "Duration must contain at least 2 characters"
+        );
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* SAVE COURSE */
+
+function saveCourse() {
+
+
+    if (!validateCourse()) {
+
+        return;
+
+    }
+
+
+    const course = {
+
+
+        id: Number(
+
+            document.getElementById("id")
+                .value
+
+        ),
+
+
+        name:
+
+            document.getElementById("name")
+                .value.trim(),
+
+
+        fees: Number(
+
+            document.getElementById("fees")
+                .value
+
+        ),
+
+
+        duration:
+
+            document.getElementById("duration")
+                .value.trim()
+
+    };
+
+
+
+    fetch(apiUrl, {
+
+
+        method: "POST",
+
+
+        headers: {
+
+            "Content-Type":
+                "application/json"
+
+        },
+
+
+        body:
+            JSON.stringify(course)
+
+
+    })
+
+
+    .then(response => {
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to add course"
+            );
+
+        }
+
+
+        return response.json();
+
+    })
+
+
+    .then(data => {
+
+
+        alert(
+            "Course added successfully"
+        );
+
+
+        clearForm();
+
+
+        loadCourses();
+
+    })
+
+
+    .catch(error => {
+
+
+        console.log(error);
+
+
+        alert(
+            "Error adding course"
+        );
+
+    });
+
+}
+
+
+/* EDIT COURSE */
+
+function editCourse(
+    id,
+    name,
+    fees,
+    duration
+) {
+
+
+    document.getElementById("id")
+        .value = id;
+
+
+    document.getElementById("name")
+        .value = name;
+
+
+    document.getElementById("fees")
+        .value = fees;
+
+
+    document.getElementById("duration")
+        .value = duration;
+
+}
+
+
+/* UPDATE COURSE */
+
+function updateCourse() {
+
+
+    if (!validateCourse()) {
+
+        return;
+
+    }
+
+
+    const course = {
+
+
+        id: Number(
+
+            document.getElementById("id")
+                .value
+
+        ),
+
+
+        name:
+
+            document.getElementById("name")
+                .value.trim(),
+
+
+        fees: Number(
+
+            document.getElementById("fees")
+                .value
+
+        ),
+
+
+        duration:
+
+            document.getElementById("duration")
+                .value.trim()
+
+    };
+
+
+
+    fetch(apiUrl, {
+
+
+        method: "PUT",
+
+
+        headers: {
+
+            "Content-Type":
+                "application/json"
+
+        },
+
+
+        body:
+            JSON.stringify(course)
+
+
+    })
+
+
+    .then(response => {
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to update course"
+            );
+
+        }
+
+
+        return response.json();
+
+    })
+
+
+    .then(data => {
+
+
+        alert(
+            "Course updated successfully"
+        );
+
+
+        clearForm();
+
+
+        loadCourses();
+
+    })
+
+
+    .catch(error => {
+
+
+        console.log(error);
+
+
+        alert(
+            "Error updating course"
+        );
+
+    });
+
+}
+
+
+/* DELETE COURSE */
+
+function deleteCourse(id) {
+
+
+    if (
+
+        !confirm(
+            "Are you sure you want to delete this course?"
+        )
+
+    ) {
+
+        return;
+
+    }
+
+
+
+    fetch(
+        apiUrl + "/" + id,
+        {
+            method: "DELETE"
+        }
+    )
+
+
+    .then(response => {
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to delete course"
+            );
+
+        }
+
+
+        return response.text();
+
+    })
+
+
+    .then(data => {
+
+
+        alert(data);
+
+
+        loadCourses();
+
+    })
+
+
+    .catch(error => {
+
+
+        console.log(error);
+
+
+        alert(
+            "Error deleting course"
+        );
+
+    });
+
+}
+
+
+/* CLEAR FORM */
+
+function clearForm() {
+
+
+    document.getElementById("id")
+        .value = "";
+
+
+    document.getElementById("name")
+        .value = "";
+
+
+    document.getElementById("fees")
+        .value = "";
+
+
+    document.getElementById("duration")
+        .value = "";
+
+}
+
+
+/* LOAD DATA */
+
+loadCourses();
+
+
+</script>
+
+</body>
+
+</html>
