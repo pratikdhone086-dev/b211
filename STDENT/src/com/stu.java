@@ -6,5 +6,8 @@ public class stu {
 		
 		System.out.println(20-10);
 	}
-
+	  public void mul(){
+system.out.println(10*20);
+		  
+	  }
 }
